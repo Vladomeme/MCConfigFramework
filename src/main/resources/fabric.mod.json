@@ -1,0 +1,42 @@
+{
+  "schemaVersion": 1,
+  "id": "njols-config-framework",
+  "version": "${mod_version}",
+  "name": "Njol's Config Framework",
+  "description": "A simple Config framework.",
+  "authors": [
+    "Njol"
+  ],
+  "contact": {
+    "homepage": "https://github.com/Njol/MCConfigFramework",
+    "issues": "https://github.com/Njol/MCConfigFramework/issues",
+    "sources": "https://github.com/Njol/MCConfigFramework"
+  },
+  "license": "GPL-3.0",
+  "icon": "assets/njols-config-framework/icon.png",
+  "environment": "client",
+  "entrypoints": {
+    "client": [
+    ],
+    "main": [
+    ]
+  },
+  "mixins": [
+  ],
+  "depends": {
+    "fabricloader": ">=${loader_version}",
+    "fabric": ">=${fabric_version}",
+    "minecraft": "~${minecraft_version}"
+  },
+  "recommends": {
+  },
+  "suggests": {
+  },
+  "custom": {
+    "modmenu": {
+      "badges": [
+        "library"
+      ]
+    }
+  }
+}
