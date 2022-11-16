@@ -6,7 +6,8 @@ import java.util.function.Supplier;
 import me.shedaniel.clothconfig2.api.ConfigBuilder;
 import me.shedaniel.clothconfig2.api.ConfigCategory;
 import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.text.TranslatableText;
+import net.minecraft.text.MutableText;
+import net.minecraft.text.TranslatableTextContent;
 
 /**
  * This fake screen is a workaround for a bug when using both modmenu and cloth-config - cloth config expects a new screen each time, but modmenu caches the screen.
@@ -19,7 +20,7 @@ public class ConfigScreen<T extends Options> extends Screen {
 	private final T defaultOptions;
 
 	protected ConfigScreen(Screen parent, String translateRoot, Supplier<T> optionsSupplier, T defaultOptions) {
-		super(new TranslatableText(translateRoot + ".title"));
+		super(MutableText.of(new TranslatableTextContent(translateRoot + ".title")));
 		this.parent = parent;
 		this.translateRoot = translateRoot;
 		this.optionsSupplier = optionsSupplier;
@@ -30,7 +31,7 @@ public class ConfigScreen<T extends Options> extends Screen {
 	protected void init() {
 		ConfigBuilder config = ConfigBuilder.create()
 			                       .setParentScreen(parent)
-			                       .setTitle(new TranslatableText(translateRoot + ".title"));
+			                       .setTitle(MutableText.of(new TranslatableTextContent(translateRoot + ".title")));
 
 		T options = optionsSupplier.get();
 
@@ -39,7 +40,7 @@ public class ConfigScreen<T extends Options> extends Screen {
 			if (categoryAnnotation == null || !options.categoryVisible(categoryAnnotation.value())) {
 				continue;
 			}
-			ConfigCategory category = config.getOrCreateCategory(new TranslatableText(translateRoot + ".category." + categoryAnnotation.value()));
+			ConfigCategory category = config.getOrCreateCategory(MutableText.of(new TranslatableTextContent(translateRoot + ".category." + categoryAnnotation.value())));
 			category.addEntry(Config.buildConfigEntry(options, defaultOptions, field, translateRoot + ".option"));
 		}
 
