@@ -16,4 +16,4 @@ pluginManagement {
         }
     }
 }
-rootProject.name = "config-framework"
+rootProject.name = "config-framework-mc1_19"
