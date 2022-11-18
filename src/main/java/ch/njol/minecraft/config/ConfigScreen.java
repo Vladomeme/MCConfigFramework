@@ -40,7 +40,7 @@ public class ConfigScreen<T extends Options> extends Screen {
 				continue;
 			}
 			ConfigCategory category = config.getOrCreateCategory(new TranslatableText(translateRoot + ".category." + categoryAnnotation.value()));
-			category.addEntry(Config.buildConfigEntry(options, defaultOptions, field, translateRoot + ".option"));
+			category.addEntry(ClothConfigSetup.buildConfigEntry(options, defaultOptions, field, translateRoot + ".option"));
 		}
 
 		config.setSavingRunnable(options::onUpdate);
