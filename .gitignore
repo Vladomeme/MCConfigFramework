@@ -23,7 +23,7 @@ atlassian-ide-plugin.xml
 *.ctxt
 
 # Package Files #
-*.jar
+(gradle-wrapper){0}.jar
 *.war
 *.nar
 *.ear
@@ -113,7 +113,3 @@ gradle-app.setting
 
 # Common working directory
 run/
-
-gradlew
-gradlew.bat
-gradle-wrapper.properties
