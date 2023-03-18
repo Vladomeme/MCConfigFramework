@@ -3,6 +3,7 @@ package ch.njol.minecraft.config;
 import ch.njol.minecraft.config.annotations.Category;
 import ch.njol.minecraft.config.annotations.Dropdown;
 import java.lang.reflect.Field;
+import java.util.AbstractList;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.function.Supplier;
@@ -11,6 +12,7 @@ import me.shedaniel.clothconfig2.api.ConfigBuilder;
 import me.shedaniel.clothconfig2.api.ConfigCategory;
 import me.shedaniel.clothconfig2.gui.entries.SubCategoryListEntry;
 import me.shedaniel.clothconfig2.impl.ConfigEntryBuilderImpl;
+import net.minecraft.client.gui.ParentElement;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.text.TranslatableText;
 
@@ -55,7 +57,11 @@ public class ConfigScreen<T extends Options> extends Screen {
 				Subcategory subcategory = new Subcategory(dropdownAnnotation.value(), categoryAnnotation);
 
 				if (subCategories.containsKey(subcategory)) {
-					subCategories.get(subcategory).getValue().add(ClothConfigSetup.buildConfigEntry(options, defaultOptions, field, translateRoot + ".option"));
+					AbstractConfigListEntry entry = ClothConfigSetup.buildConfigEntry(options, defaultOptions, field, translateRoot + ".option");
+					subCategories.get(subcategory).getValue().add(entry);
+					//DO NOT REMOVE THE SETEXPANDED, APPARENTLY YOU CAN'T ACCESS THE CHILDRENS WITHOUT IT >:(
+					subCategories.get(subcategory).setExpanded(true);
+					((AbstractList<ParentElement>) subCategories.get(subcategory).children()).add(entry);
 				} else {
 					ArrayList<AbstractConfigListEntry> list = new ArrayList<>();
 					list.add(ClothConfigSetup.buildConfigEntry(options, defaultOptions, field, translateRoot + ".option"));
