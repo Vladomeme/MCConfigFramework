@@ -9,8 +9,7 @@ import me.shedaniel.clothconfig2.gui.entries.SubCategoryListEntry;
 import me.shedaniel.clothconfig2.impl.ConfigEntryBuilderImpl;
 import net.minecraft.client.gui.ParentElement;
 import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.text.MutableText;
-import net.minecraft.text.TranslatableTextContent;
+import net.minecraft.text.Text;
 
 import java.lang.reflect.Field;
 import java.util.AbstractList;
@@ -31,7 +30,7 @@ public class ConfigScreen<T extends Options> extends Screen {
 	private final HashMap<Subcategory, SubCategoryListEntry> subCategories = new HashMap<>();
 
 	protected ConfigScreen(Screen parent, String translateRoot, Supplier<T> optionsSupplier, T defaultOptions) {
-		super(MutableText.of(new TranslatableTextContent(translateRoot + ".title")));
+		super(Text.translatable(translateRoot + ".title"));
 		this.parent = parent;
 		this.translateRoot = translateRoot;
 		this.optionsSupplier = optionsSupplier;
@@ -43,7 +42,7 @@ public class ConfigScreen<T extends Options> extends Screen {
 	protected void init() {
 		ConfigBuilder config = ConfigBuilder.create()
 			                       .setParentScreen(parent)
-			                       .setTitle(MutableText.of(new TranslatableTextContent(translateRoot + ".title")));
+			                       .setTitle(Text.translatable(translateRoot + ".title"));
 
 		T options = optionsSupplier.get();
 
@@ -53,7 +52,7 @@ public class ConfigScreen<T extends Options> extends Screen {
 			if (categoryAnnotation == null || !options.categoryVisible(categoryAnnotation.value())) {
 				continue;
 			}
-			ConfigCategory category = config.getOrCreateCategory(MutableText.of(new TranslatableTextContent(translateRoot + ".category." + categoryAnnotation.value())));
+			ConfigCategory category = config.getOrCreateCategory(Text.translatable(translateRoot + ".category." + categoryAnnotation.value()));
 
 			if (dropdownAnnotation != null) {
 				Subcategory subcategory = new Subcategory(dropdownAnnotation.value(), categoryAnnotation);
@@ -67,7 +66,7 @@ public class ConfigScreen<T extends Options> extends Screen {
 				} else {
 					ArrayList<AbstractConfigListEntry> list = new ArrayList<>();
 					list.add(ClothConfigSetup.buildConfigEntry(options, defaultOptions, field, translateRoot + ".option"));
-					SubCategoryListEntry entry = ConfigEntryBuilderImpl.create().startSubCategory(MutableText.of(new TranslatableTextContent(translateRoot + ".subcategory." + dropdownAnnotation.value())), list).build();
+					SubCategoryListEntry entry = ConfigEntryBuilderImpl.create().startSubCategory(Text.translatable(translateRoot + ".subcategory." + dropdownAnnotation.value()), list).build();
 					subCategories.put(subcategory, entry);
 					category.addEntry(entry);
 				}

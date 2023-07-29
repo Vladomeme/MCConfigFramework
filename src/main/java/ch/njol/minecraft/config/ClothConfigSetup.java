@@ -18,7 +18,6 @@ import me.shedaniel.math.Color;
 import net.minecraft.text.LiteralTextContent;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableTextContent;
 
 /*
  * All methods that rely on cloth config (and optionally mod menu) being present must go here.
@@ -44,18 +43,18 @@ public class ClothConfigSetup {
 		// This code cannot be simplified well because ClothConfig sucks. E.g. setTooltip is defined separately for every subclass...
 		registerType(DescriptionLine.class, (value, defaultValue, field, translatePath, saveConsumer) ->
 			                                    ConfigEntryBuilderImpl.create()
-				                                    .startTextDescription(MutableText.of(new TranslatableTextContent(translatePath)))
+				                                    .startTextDescription(Text.translatable(translatePath))
 				                                    .build());
 		registerType(Boolean.TYPE, (value, defaultValue, field, translatePath, saveConsumer) ->
 			                           ConfigEntryBuilderImpl.create()
-				                           .startBooleanToggle(MutableText.of(new TranslatableTextContent(translatePath)), value)
+				                           .startBooleanToggle(Text.translatable(translatePath), value)
 				                           .setDefaultValue(defaultValue)
-				                           .setTooltip(MutableText.of(new TranslatableTextContent(translatePath + ".tooltip")))
+				                           .setTooltip(Text.translatable(translatePath + ".tooltip"))
 				                           .setSaveConsumer(saveConsumer)
 				                           .build());
 		registerType(Integer.TYPE, (value, defaultValue, field, translatePath, saveConsumer) -> {
-			Text text = MutableText.of(new TranslatableTextContent(translatePath));
-			Text tooltip = MutableText.of(new TranslatableTextContent(translatePath + ".tooltip"));
+			Text text = Text.translatable(translatePath);
+			Text tooltip = Text.translatable(translatePath + ".tooltip");
 			IntSlider slider = field.getAnnotation(IntSlider.class);
 			if (field.getAnnotation(ch.njol.minecraft.config.annotations.Color.class) != null) {
 				return ConfigEntryBuilderImpl.create()
@@ -68,8 +67,8 @@ public class ClothConfigSetup {
 				return ConfigEntryBuilderImpl.create()
 					       .startIntSlider(text, value, slider.min(), slider.max())
 					       .setDefaultValue(defaultValue)
-					       .setTextGetter(v -> MutableText.of(!slider.minText().isEmpty() && v <= slider.min() ? new TranslatableTextContent(slider.minText())
-						                                          : !slider.maxText().isEmpty() && v >= slider.max() ? new TranslatableTextContent(slider.maxText())
+					       .setTextGetter(v -> MutableText.of(!slider.minText().isEmpty() && v <= slider.min() ? Text.translatable(slider.minText()).getContent()
+						                                          : !slider.maxText().isEmpty() && v >= slider.max() ? Text.translatable(slider.maxText()).getContent()
 							                                            : new LiteralTextContent(v + slider.unit())))
 					       .setTooltip(tooltip)
 					       .setSaveConsumer(saveConsumer)
@@ -85,16 +84,16 @@ public class ClothConfigSetup {
 		});
 		DecimalFormat numberFormat = new DecimalFormat("0.##");
 		registerType(Float.TYPE, (value, defaultValue, field, translatePath, saveConsumer) -> {
-			Text text = MutableText.of(new TranslatableTextContent(translatePath));
-			Text tooltip = MutableText.of(new TranslatableTextContent(translatePath + ".tooltip"));
+			Text text = Text.translatable(translatePath);
+			Text tooltip = Text.translatable(translatePath + ".tooltip");
 			FloatSlider slider = field.getAnnotation(FloatSlider.class);
 			if (slider != null) {
 				float step = slider.step();
 				return ConfigEntryBuilderImpl.create()
 					       .startLongSlider(text, Math.round(value / step), Math.round(slider.min() / step), Math.round(slider.max() / step))
 					       .setDefaultValue(Math.round(defaultValue / slider.step()))
-					       .setTextGetter(l -> MutableText.of(!slider.minText().isEmpty() && l * step - 0.01 * step <= slider.min() ? new TranslatableTextContent(slider.minText())
-						                                          : !slider.maxText().isEmpty() && l * step + 0.01 * step >= slider.max() ? new TranslatableTextContent(slider.maxText())
+					       .setTextGetter(l -> MutableText.of(!slider.minText().isEmpty() && l * step - 0.01 * step <= slider.min() ? Text.translatable(slider.minText()).getContent()
+						                                          : !slider.maxText().isEmpty() && l * step + 0.01 * step >= slider.max() ? Text.translatable(slider.maxText()).getContent()
 							                                            : new LiteralTextContent(numberFormat.format(l * step * slider.unitStep()) + slider.unit())))
 					       .setTooltip(tooltip)
 					       .setSaveConsumer(l -> saveConsumer.accept(l * step))
@@ -110,9 +109,9 @@ public class ClothConfigSetup {
 		});
 		registerType(String.class, (value, defaultValue, field, translatePath, saveConsumer) -> {
 			TextFieldBuilder builder = ConfigEntryBuilderImpl.create()
-				                           .startTextField(MutableText.of(new TranslatableTextContent(translatePath)), value)
+				                           .startTextField(Text.translatable(translatePath), value)
 				                           .setDefaultValue(defaultValue)
-				                           .setTooltip(MutableText.of(new TranslatableTextContent(translatePath + ".tooltip")))
+				                           .setTooltip(Text.translatable(translatePath + ".tooltip"))
 				                           .setSaveConsumer(saveConsumer);
 			if (field.getAnnotation(Regex.class) != null) {
 				builder.setErrorSupplier(s -> {
@@ -128,10 +127,10 @@ public class ClothConfigSetup {
 		});
 		registerSuperType(Enum.class, (value, defaultValue, field, translatePath, saveConsumer) ->
 			                              ConfigEntryBuilderImpl.create()
-				                              .startEnumSelector(MutableText.of(new TranslatableTextContent(translatePath)), (Class<Enum<?>>) field.getType(), (Enum<?>) value)
+				                              .startEnumSelector(Text.translatable(translatePath), (Class<Enum<?>>) field.getType(), (Enum<?>) value)
 				                              .setDefaultValue((Enum<?>) defaultValue)
-				                              .setTooltip(MutableText.of(new TranslatableTextContent(translatePath + ".tooltip")))
-				                              .setEnumNameProvider(v -> MutableText.of(new TranslatableTextContent("njols-config-framework.enum." + v.getDeclaringClass().getSimpleName() + "." + v.name())))
+				                              .setTooltip(Text.translatable(translatePath + ".tooltip"))
+				                              .setEnumNameProvider(v -> Text.translatable("njols-config-framework.enum." + v.getDeclaringClass().getSimpleName() + "." + v.name()))
 				                              .setSaveConsumer(saveConsumer::accept)
 				                              .build());
 	}

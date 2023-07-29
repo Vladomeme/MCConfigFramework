@@ -1,6 +1,5 @@
 pluginManagement {
     repositories {
-        jcenter()
         maven {
             name = 'Fabric'
             url = 'https://maven.fabricmc.net/'
@@ -8,12 +7,5 @@ pluginManagement {
         mavenCentral()
         gradlePluginPortal()
     }
-    resolutionStrategy {
-        eachPlugin {
-            if (requested.id.namespace == 'fabric-loom') {
-                useModule("fabric-loom:fabric-loom.gradle.plugin:${requested.version}")
-            }
-        }
-    }
 }
-rootProject.name = "config-framework-mc1_19"
+rootProject.name = "config-framework-mc1_20"
